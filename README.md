@@ -18,16 +18,16 @@
 
 ```mermaid
 flowchart LR
-    U[Admin / Salesperson / Customer] -->|HTTPS| CF[Cloudflare]
-    CF --> NG[Nginx<br/>TLS, reverse proxy]
-    NG -->|/| FE[React / Next.js server<br/>:3001]
-    NG -->|/api → live colour| API[Spring Boot API<br/>Docker container<br/>blue :8081 / green :8082]
-    FE -->|fetch with JWT| NG
-    API --> SEC[Auth filter<br/>token → user, role, codes]
-    SEC --> SVC[Services + repositories<br/>role-based SQL filter]
-    SVC -->|pooled, parameterised SQL| SAP[(SAP B1<br/>SQL Server)]
-    SVC <--> R[(Redis<br/>cache keyed by user scope)]
-    JOB[Scheduled jobs] -->|order / dispatch / outstanding mails| MAIL[SMTP]
+    U["Admin / Salesperson / Customer"] -->|"HTTPS"| CF["Cloudflare"]
+    CF --> NG["Nginx<br/>TLS, reverse proxy"]
+    NG -->|"/"| FE["React / Next.js server<br/>:3001"]
+    NG -->|"/api → live colour"| API["Spring Boot API<br/>Docker container<br/>blue :8081 / green :8082"]
+    FE -->|"fetch with JWT"| NG
+    API --> SEC["Auth filter<br/>token → user, role, codes"]
+    SEC --> SVC["Services + repositories<br/>role-based SQL filter"]
+    SVC -->|"pooled, parameterised SQL"| SAP[("SAP B1<br/>SQL Server")]
+    SVC <--> R[("Redis<br/>cache keyed by user scope")]
+    JOB["Scheduled jobs"] -->|"order / dispatch / outstanding mails"| MAIL["SMTP"]
     JOB --> SAP
 ```
 
@@ -133,13 +133,13 @@ For a few hundred users, a DB lookup is cheap and **instant revocation** matters
 
 ```mermaid
 flowchart LR
-    GH[push to main] --> T[GitHub Actions<br/>mvn test]
-    T -->|pass| RUN[self-hosted runner<br/>on the VPS]
-    RUN --> BUILD[docker build<br/>multi-stage]
-    BUILD --> IDLE[start idle colour<br/>blue :8081 / green :8082]
-    IDLE --> HC{/actuator/health UP?}
-    HC -->|yes| SW[Nginx proxy_pass → new port<br/>graceful reload, stop old]
-    HC -->|no| KEEP[keep old live]
+    GH["push to main"] --> T["GitHub Actions<br/>mvn test"]
+    T -->|"pass"| RUN["self-hosted runner<br/>on the VPS"]
+    RUN --> BUILD["docker build<br/>multi-stage"]
+    BUILD --> IDLE["start idle colour<br/>blue :8081 / green :8082"]
+    IDLE --> HC{"/actuator/health UP?"}
+    HC -->|"yes"| SW["Nginx proxy_pass → new port<br/>graceful reload, stop old"]
+    HC -->|"no"| KEEP["keep old live"]
 ```
 
 **The Docker image (multi-stage):**
